@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - API_KEY=${API_KEY}
+      - BASE_URL=${BASE_URL}
+      - MODEL_NAME=${MODEL_NAME}
+      - TTS_SERVER_URL=http://tts:5002
+    depends_on:
+      - tts
+    networks:
+      - aiva-network
+
+  tts:
+    image: ghcr.io/coqui-ai/tts-cpu:latest
+    platform: linux/amd64
+    ports:
+      - "5002:5002"
+    entrypoint: ["python3", "-m", "TTS.server.server"]
+    command: [
+      "--model_name", "tts_models/en/vctk/vits",
+      "--port", "5002",
+      "--use_cuda", "false"
+    ]
+    networks:
+      - aiva-network
+
+networks:
+  aiva-network:
+    driver: bridge
