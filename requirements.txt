@@ -1,0 +1,9 @@
+# Auto-generated from pyproject.toml for pip compatibility
+streamlit==1.28.0
+openai==1.3.0
+python-dotenv==1.0.0
+requests==2.31.0
+pydub==0.25.1
+PyPDF2==4.0.1
+pyaudio==0.2.13
+SpeechRecognition==3.10.0

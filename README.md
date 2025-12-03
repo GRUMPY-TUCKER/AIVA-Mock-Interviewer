@@ -183,7 +183,7 @@ python3 TTS/server/server.py --model_name tts_models/en/vctk/vits
 Then in another terminal:
 
 ```bash
-streamlit run app.py
+streamlit run src/app.py
 ```
 
 ### Option 2: Docker Compose (Recommended)
@@ -193,6 +193,53 @@ docker-compose up -d
 ```
 
 Access at: [http://localhost:8501](http://localhost:8501)
+
+### Option 3: Cloud Deployment
+
+**Deploy to Render.com (Free with this repo):**
+
+1. Push code to GitHub
+2. Go to https://render.com and sign in with GitHub
+3. Click **"New +"** → **"Web Service"**
+4. Connect your repository
+5. Add `API_KEY` environment variable
+6. Deploy! Your app will be live at `https://your-app.onrender.com`
+
+**See [DEPLOYMENT.md](./DEPLOYMENT.md) for full deployment options and troubleshooting.**
+
+---
+
+## 🚀 Quick Start
+
+**Easiest way to run locally:**
+
+```bash
+# 1. Clone and enter directory
+git clone https://github.com/GRUMPY-TUCKER/AI-Powered-Excel-Mock-Interviewer.git
+cd "Excel Interview"
+
+# 2. Create environment
+python -m venv venv
+.\venv\Scripts\Activate.ps1  # Windows
+# or: source venv/bin/activate  # macOS/Linux
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Set up environment
+cp .env.example .env
+# Edit .env with your OpenAI API key
+
+# 5. Run TTS server (optional but recommended)
+docker run -d -p 5002:5002 ghcr.io/coqui-ai/tts-cpu:latest
+
+# 6. Start the app
+streamlit run src/app.py
+```
+
+Visit: **http://localhost:8501** 🎉
+
+**For detailed setup instructions, see [QUICKSTART.md](./QUICKSTART.md)**
 
 ---
 

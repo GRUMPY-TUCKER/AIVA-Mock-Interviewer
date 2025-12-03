@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: aiva-mock-interviews
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    port: 8501
+    
+    # Deployment settings
+    autoDeploy: true
+    healthCheckPath: /_stcore/health
+    
+    # Environment variables
+    envVars:
+      - key: API_KEY
+        sync: false  # Set via Render dashboard
+      - key: BASE_URL
+        value: https://api.openai.com/v1
+      - key: MODEL_NAME
+        value: gpt-4o-mini
+      - key: TTS_SERVER_URL
+        value: http://aiva-tts-server:5002
+      - key: STREAMLIT_SERVER_HEADLESS
+        value: "true"
+      - key: STREAMLIT_SERVER_PORT
+        value: "8501"
+
+  - type: web
+    name: aiva-tts-server
+    runtime: docker
+    image: ghcr.io/coqui-ai/tts-cpu:latest
+    port: 5002
+    
+    # TTS server configuration
+    command: python3 -m TTS.server.server --model_name tts_models/en/vctk/vits --port 5002 --server_name 0.0.0.0
+    
+    # Health check for TTS
+    healthCheckPath: /api/tts_endpoint
+    
+    # Auto-redeploy
+    autoDeploy: true

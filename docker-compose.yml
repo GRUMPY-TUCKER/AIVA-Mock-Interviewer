@@ -4,14 +4,23 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - API_KEY=${API_KEY}
-      - BASE_URL=${BASE_URL}
-      - MODEL_NAME=${MODEL_NAME}
+      - API_KEY=${API_KEY:-your_openai_api_key_here}
+      - BASE_URL=${BASE_URL:-https://api.openai.com/v1}
+      - MODEL_NAME=${MODEL_NAME:-gpt-4o-mini}
       - TTS_SERVER_URL=http://tts:5002
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_SERVER_PORT=8501
     depends_on:
       - tts
     networks:
       - aiva-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   tts:
     image: ghcr.io/coqui-ai/tts-cpu:latest
@@ -22,10 +31,17 @@ services:
     command: [
       "--model_name", "tts_models/en/vctk/vits",
       "--port", "5002",
-      "--use_cuda", "false"
+      "--use_cuda", "false",
+      "--server_name", "0.0.0.0"
     ]
     networks:
       - aiva-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/api/tts_endpoint"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   aiva-network:
